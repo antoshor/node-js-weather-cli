@@ -1,19 +1,36 @@
 #!/usr/bin/env node
 
 import { getArgs } from './helpers/args.js';
+import { printHelp, printError, printSuccess } from './services/log.service.js';
+import { saveKeyValue, TOKEN_DICTIONARY } from './services/storage.service.js';
+import { getCoords } from './services/api.service.js'
+
+const saveToken = async (token) => {
+    if (!token.length){
+        printError(`The token isn't provided !`);
+        return;
+    }
+    try {
+        await saveKeyValue('token', TOKEN_DICTIONARY.token);
+        printSuccess('Token saved');
+    } catch(e) {
+        printError(e.message);
+    }
+}
 
 const intiCLI = () => {
     const args = getArgs(process.argv);
-    console.log(args);
+    console.log(process.env)
     if (args.h) {
-        // output help
+        printHelp();
     }
     if (args.s) {
         // save city
     }
     if (args.t) {
-        // save token
+        return saveToken(args.t);
     }
+    getCoords('Donetsk');
     // output weather
 };
 
